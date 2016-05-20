@@ -48,10 +48,10 @@ while read -r DOMAIN; do
 
 		case "$i" in
 		1)
-			Message="FOUND 1 - investigate, but this might be coincidental"
+			Message="FOUND 1 - MAYBE LYNC"
 			;;
 	        2)
-	                Message="FOUND 2 - this is probably a hit"
+	                Message="FOUND 2 - PROBABLY LYNC"
 	                ;;
 	        3)
 	                Message="FOUND 3 - ALMOST DEFINITELY LYNC"
