@@ -31,6 +31,12 @@ while read -r DOMAIN; do
 			i=$((i+1));
 		fi
 
+		host -t a lyncdiscover.$DOMAIN >/dev/null 2>&1
+		RESULT="$?"
+		if [ "$RESULT" -eq "0" ]; then
+			i=$((i+1));
+		fi
+
 		host -t a dialin.$DOMAIN >/dev/null 2>&1
 		RESULT="$?"
 		if [ "$RESULT" -eq "0" ]; then
@@ -55,6 +61,9 @@ while read -r DOMAIN; do
 	                ;;
 	        3)
 	                Message="FOUND 3 - ALMOST DEFINITELY LYNC"
+        	        ;;
+	        4)
+	                Message="FOUND 4 - THIS IS DEFINITELY LYNC"
         	        ;;
 
 		esac
