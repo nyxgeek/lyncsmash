@@ -11,6 +11,10 @@ fi
 
 while read -r DOMAIN; do
 
+	if [ -z $DOMAIN ]; then
+		continue
+	fi
+
 	#this is to check if wildcard is enabled, if it is, then audi 5000
 	host -t a x718skal018237hsdfl98123adf098aaa.$DOMAIN  >/dev/null 2>&1
 	if [ $? -ne 0 ]; then
@@ -27,34 +31,36 @@ while read -r DOMAIN; do
 			i=$((i+1));
 		fi
 
-
-
 		host -t a dialin.$DOMAIN >/dev/null 2>&1
+		RESULT="$?"
 		if [ "$RESULT" -eq "0" ]; then
 			i=$((i+1));
 		fi
 
 		host -t a access.$DOMAIN >/dev/null 2>&1
+		RESULT="$?"
 		if [ "$RESULT" -eq "0" ]; then
 			i=$((i+1));
 		fi
 
+
+		#now choose your own adventure based off of number of results
+
 		case "$i" in
 		1)
-			Message="Found 1, might be coincidental"
+			Message="FOUND 1 - investigate, but this might be coincidental"
 			;;
 	        2)
-	                Message="Found 2, this is probably a hit"
+	                Message="FOUND 2 - this is probably a hit"
 	                ;;
 	        3)
-	                Message="FOUND 3 - DEFINITELY LYNC"
+	                Message="FOUND 3 - ALMOST DEFINITELY LYNC"
         	        ;;
-		0)
-			Message="NO LYNC"
-  			;;
 
 		esac
 
+
+		#if at least one domain is found then print, otherwise don't say anything
 		if [ $i -ne 0 ]; then
 			echo "$DOMAIN  - $Message"
 		fi
