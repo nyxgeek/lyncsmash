@@ -53,6 +53,10 @@ ofile=''
  
 # Read command line args
 myopts, args = getopt.getopt(sys.argv[1:],"i:o:")
+
+if len(myopts) == 0:
+    print "usage: ./lyncstink.py -i <inputfile> -o <outputfile>"
+    sys.exit()
  
 for o, a in myopts:
     if o == '-i':
