@@ -1,0 +1,11 @@
+# Exploit Title: Google dork to discover Lync Server 2013
+# Google Dork: inurl:Dialin/Conference.aspx
+# Date: 2016-08-03
+# Exploit Author: @nyxgeek
+# Vendor Homepage: microsoft.com 
+
+This search reveals Lync Server 2013 dialin login pages. A user enumeration
+timing attack can be performed against these pages. Long response time
+indicates that the username is invalid. Short response time indicates that
+you have a valid username.
+
