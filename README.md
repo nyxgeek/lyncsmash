@@ -2,7 +2,7 @@
 Locate domains that are running Lync servers
 
 
-When Lync is published externally it requires a number of subdomains. These include:
+When Lync is published externally it is often set up with a number of subdomains. These include:
 
  * lyncdiscover.domain.com
  * access.domain.com
