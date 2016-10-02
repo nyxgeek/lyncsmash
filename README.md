@@ -1,4 +1,14 @@
-# lyncstink
+#lyncsmash
+
+a collection of tools to enumerate and attack Microsoft Lync installations
+
+*1_FindDomain.sh  - an example of how to enumerate the domain for a Lync install
+*2_lyncbrute.sh - an example for use of a Lync user enumeration timing attack (see lyncbrute.py)
+*3_brute_force_ntlm.sh - an example of a medusa brute force attack against a Lync install
+
+
+
+## lyncstink
 Locate domains that are running Lync servers
 
 
@@ -14,7 +24,7 @@ This script will check a domain to see if these exist. It also checks for a long
 subdomain in order to exclude wildcarded domains.
 
 
-## Example output
+### Example output
 
 ```
 yahoo.com  - FOUND 1 - MAYBE LYNC
