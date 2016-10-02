@@ -7,6 +7,8 @@ a collection of tools to enumerate and attack Microsoft Lync installations
  * 3_brute_force_ntlm.sh - an example of a medusa brute force attack against a Lync install
 
 
+YouTube link: https://www.youtube.com/watch?v=v0NTaCFk6VI
+
 
 ## lyncstink
 Locate domains that are running Lync servers
