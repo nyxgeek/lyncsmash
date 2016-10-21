@@ -2,13 +2,14 @@
 
 a collection of tools to enumerate and attack Microsoft Lync installations
 
- * 1_FindDomain.sh  - an example of how to enumerate the domain for a Lync install
- * 2_lyncbrute.sh - an example for use of a Lync user enumeration timing attack (see lyncbrute.py)
- * 3_brute_force_ntlm.sh - an example of a medusa brute force attack against a Lync install
+ * find_domain.sh  - an example of how to enumerate the domain for a Lync install
+ * lync_smash.py - brute force/user enumeration timing attack in one
+ * brute_force_ntlm.sh - an example of a medusa brute force attack against a Lync install
 
 
 YouTube link: https://www.youtube.com/watch?v=v0NTaCFk6VI
 
+Slide Deck: https://github.com/nyxgeek/lyncsmash/blob/master/DerbyCon%20Files/TheWeakestLync.pdf
 
 ## lyncstink
 Locate domains that are running Lync servers
