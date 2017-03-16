@@ -9,6 +9,6 @@ fi
 echo "Finding domain for $HOST"
 echo ""
 echo "Command:"
-echo "nmap -sS -p443 --script http-ntlm-info $HOST --script-args http-ntlm-info.root=/abs/"
+echo "nmap -sS -p443 --script http-ntlm-info --script-args http-ntlm-info.root=/abs/ $HOST "
 
-nmap -sS -p443 --script http-ntlm-info $HOST --script-args http-ntlm-info.root=/abs/
+nmap -sS -p443 --script http-ntlm-info --script-args http-ntlm-info.root=/abs/ $HOST 
