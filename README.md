@@ -11,6 +11,8 @@ YouTube link: https://www.youtube.com/watch?v=v0NTaCFk6VI
 
 Slide Deck: https://github.com/nyxgeek/lyncsmash/blob/master/DerbyCon%20Files/TheWeakestLync.pdf
 
+If you're looking for username lists, I highly recommend 'Statistically Likely Usernames': https://github.com/insidetrust/statistically-likely-usernames.git
+
 
 ## lync_smash.py
 Timing attack to enumerate valid accounts
