@@ -1,4 +1,4 @@
-#lyncsmash
+# lyncsmash
 
 a collection of tools to enumerate and attack Microsoft Lync installations
 
@@ -32,3 +32,7 @@ locking out a user account
 ```
 python lync_smash.py lock -H 2013-lync-fe.contoso.com -u administrator -d CONTOSO
 ```
+
+
+## thanks!
+Thanks to @coldfusion39 and @spoonman1091 for contributing fixes and improvements!
