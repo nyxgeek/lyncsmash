@@ -26,7 +26,7 @@ python lync_smash.py enum -H 2013-lync-fe.contoso.com -U usernamelist.txt -d CON
 
 discovering domains that are running Lync
 ```
-python lync_smash.py discover -H url_list.txt
+python lync_smash.py discover -H domain_list.txt
 ```
 locking out a user account
 ```
