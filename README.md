@@ -1,10 +1,12 @@
 # lyncsmash
 
-a collection of tools to enumerate and attack Microsoft Lync installations
+a collection of tools to enumerate and attack self-hosted Skype for Business and Microsoft Lync installations that are externally accessible.
+*
 
-YouTube link: https://www.youtube.com/watch?v=v0NTaCFk6VI
 
-Slide Deck: https://github.com/nyxgeek/lyncsmash/blob/master/DerbyCon%20Files/TheWeakestLync.pdf
+DerbyCon 6.0 YouTube link: https://www.youtube.com/watch?v=v0NTaCFk6VI
+
+DerbyCon 6.0 Slide Deck: https://github.com/nyxgeek/lyncsmash/blob/master/DerbyCon%20Files/TheWeakestLync.pdf
 
 
 ## scripts
