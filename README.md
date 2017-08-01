@@ -29,6 +29,7 @@ DerbyCon 6.0 Slide Deck: https://github.com/nyxgeek/lyncsmash/blob/master/DerbyC
 
 If you're looking for username lists, I highly recommend 'Statistically Likely Usernames': https://github.com/insidetrust/statistically-likely-usernames.git
 
+<hr>
 
 ## using lyncsmash.py
 
@@ -92,6 +93,7 @@ python lync_smash.py lock -H 2013-lync-fe.contoso.com -u administrator -d CONTOS
 
 ```
 
+<hr>
 
 ## thanks!
 Thanks to @coldfusion39 and @spoonman1091 for contributing fixes and improvements!
