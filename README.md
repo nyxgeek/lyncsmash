@@ -11,7 +11,7 @@
 a collection of tools to enumerate and attack self-hosted Skype for Business and Microsoft Lync installations that are externally accessible.
 
 *Note: these tools will not work with Skype/Lync installations hosted at Microsoft.*
-
+<hr>
 
 DerbyCon 6.0 YouTube link: https://www.youtube.com/watch?v=v0NTaCFk6VI
 
