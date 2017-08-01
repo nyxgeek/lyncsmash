@@ -38,7 +38,6 @@ Parameters:
     -U	username list
     -p  password to use
     -d	domain
-
 ```
 In this mode lyncsmash will enumerate usernames via a timing attack, using the Webticket service located on the Lync Front-End server. If a bad username and/or domain is specified, the response will be long. If it is a valid user, the response will be short. Due to limitations of the timing-attack, this can only be run single-thraded.
 
@@ -46,6 +45,7 @@ In this mode lyncsmash will enumerate usernames via a timing attack, using the W
 usage:
 ```
 python lync_smash.py enum -H 2013-lync-fe.contoso.com -U usernamelist.txt -p Summer2017 -d CONTOSO
+
 ```
 
 ### lyncsmash.py discover - discovering domains that are running Skype/Lync
@@ -59,6 +59,7 @@ In this mode lyncsmash will attempt to enumerate various Skype/Lync subdomains v
 usage:
 ```
 python lync_smash.py discover -H domain_list.txt
+
 ```
 
 ### lyncsmash lock - lockout an account with repeated login failures
@@ -77,8 +78,8 @@ In this mode lyncsmash will make 5 login attempts with an incorrect password, at
 usage:
 ```
 python lync_smash.py lock -H 2013-lync-fe.contoso.com -u administrator -d CONTOSO
-```
 
+```
 
 
 ## thanks!
