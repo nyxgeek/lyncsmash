@@ -48,6 +48,10 @@ def main():
                                         for user in user_file:
                                                 response_time = send_xml(args.host, args.domain, user.rstrip(),args.passwd)
                                                 print_status("Time for {0}: {1}".format(user.rstrip(), response_time))
+                                                candidatevalue=float(float(response_time)/timeout)
+						if candidatevalue <= float("0.4"):
+                                                        print_good("FOUND VALID USERNAME {0}".format(user.rstrip()))
+
                                 user_file.close()
                 else:
                         print_error('Could not find username file')
@@ -157,6 +161,9 @@ def send_xml(host, domain, user, passwd):
                         return None
                 elif int(status_code) == 403:
                         print_error('RECEIVING 403 FORBIDDEN - WRONG SERVER OR IT IS MS-HOSTED')
+                        return None
+                elif int(status_code) == 401:
+                        print_error('RECEIVING 401 AUTH PROMPT, SOMETHING IS UP, TEST WebTicket URL MANUALLY')
                         return None
         except Exception as error:
                 return None
