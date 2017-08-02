@@ -149,7 +149,7 @@ def send_xml(host, domain, user, passwd):
                 webholder = requests.post(lync_url, headers=headers, data=xml_data, verify=False)
                 response_time = str(webholder.elapsed.total_seconds())
                 status_code = webholder.status_code
-                print "Received status code " + str(status_code)
+                #print "Received status code " + str(status_code)
                 if int(status_code) == 200:
                         print_success(domain_user.rstrip(),passwd.rstrip())
                 elif int(status_code) == 404:
