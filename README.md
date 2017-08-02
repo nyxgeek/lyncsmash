@@ -56,7 +56,7 @@ In this mode lyncsmash will enumerate usernames via a timing attack, using the W
 
 usage:
 ```
-python lync_smash.py enum -H 2013-lync-fe.contoso.com -U usernamelist.txt -p Summer2017 -d CONTOSO
+python lyncsmash.py enum -H 2013-lync-fe.contoso.com -U usernamelist.txt -p Summer2017 -d CONTOSO
 
 ```
 
@@ -70,7 +70,7 @@ In this mode lyncsmash will attempt to enumerate various Skype/Lync subdomains v
 
 usage:
 ```
-python lync_smash.py discover -H domain_list.txt
+python lyncsmash.py discover -H domain_list.txt
 
 ```
 
@@ -89,7 +89,7 @@ In this mode lyncsmash will make 5 login attempts with an incorrect password, at
 
 usage:
 ```
-python lync_smash.py lock -H 2013-lync-fe.contoso.com -u administrator -d CONTOSO
+python lyncsmash.py lock -H 2013-lync-fe.contoso.com -u administrator -d CONTOSO
 
 ```
 
