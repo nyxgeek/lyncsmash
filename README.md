@@ -8,7 +8,7 @@
 ```                                                                   
 
 
-a collection of tools to enumerate and attack self-hosted Skype for Business and Microsoft Lync installations that are externally accessible.
+a collection of tools to enumerate and attack self-hosted Skype for Business and Microsoft Lync installations
 
 *Note: these tools will not work with Skype/Lync installations hosted at Microsoft.*
 <hr>
