@@ -101,7 +101,7 @@ def discover_lync(host):
                 print_status("Trying {0}.{1}".format(subdomains[position], host))
                 try:
                         response = requests.get(lync_url, timeout=3, verify=False)
-                        if response.status_code == 200:
+                        if response.status_code == 200 or response.status_code == 403:
                                 if position == 0:
                                         print_warn('Found Wildcard domain - Time to GTFO')
                                         break
