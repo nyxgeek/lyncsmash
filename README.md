@@ -101,4 +101,4 @@ python lyncsmash.py lock -H 2013-lync-fe.contoso.com -u administrator -d CONTOSO
 <hr>
 
 ## thanks!
-Thanks to @coldfusion39 and @spoonman1091 for contributing fixes and improvements!
+Thanks to @coldfusion39, @spoonman1091, and @shellfail for contributing fixes and improvements!
