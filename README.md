@@ -48,7 +48,7 @@ lyncsmash has three operating modes:
 Parameters:
     -H	hostname
     -U	username list
-    -p  password to use
+    -p  password list
     -d	domain
 ```
 In this mode lyncsmash will enumerate usernames via a timing attack, using the Webticket service located on the Lync Front-End server. If a bad username and/or domain is specified, the response will be long. If it is a valid user, the response will be short. Due to limitations of the timing-attack, this can only be run single-thraded.
@@ -56,7 +56,7 @@ In this mode lyncsmash will enumerate usernames via a timing attack, using the W
 
 usage:
 ```
-python lyncsmash.py enum -H 2013-lync-fe.contoso.com -U usernamelist.txt -p Summer2017 -d CONTOSO
+python lyncsmash.py enum -H 2013-lync-fe.contoso.com -U usernamelist.txt -p passwordlist.txt -d CONTOSO
 
 ```
 
