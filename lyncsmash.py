@@ -200,7 +200,7 @@ def send_xml(host, domain, user, passwd):
                 if int(status_code) == 200:
                         print_success(domain_user.rstrip(),passwd.rstrip())
                 elif int(status_code) == 404:
-                        print_error('CHECK YOSELF BEFORE YOU WRECK YOSELF - GETTING 404s OVER HERE!')
+                        print_error('GETTING 404s OVER HERE!')
                         return None
                 elif int(status_code) == 403:
                         print_error('RECEIVING 403 FORBIDDEN - WRONG SERVER OR IT IS MS-HOSTED')
@@ -214,7 +214,7 @@ def send_xml(host, domain, user, passwd):
         return response_time
 
 def print_success(username,password):
-        print("\033[1m\033[32m[WOOT]\033[0m FOUND USER {0} with password {1}".format(username,password))
+        print("\033[1m\033[32m[WOOT]\033[0m RETURNED STATUS 200: POSSIBLE USER {0} with PASS {1}".format(username,password))
 
 def print_error(msg):
         print("\033[1m\033[31m[-]\033[0m {0}".format(msg))
