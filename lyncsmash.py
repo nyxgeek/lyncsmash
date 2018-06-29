@@ -109,7 +109,8 @@ def discover_lync(host):
                 'lyncaccess01',
                 'lyncaccess',
                 'lync10',
-                'lyncweb'
+                'lyncweb',
+		'sip'
         ]
 
         for position in range(0, len(subdomains)):
