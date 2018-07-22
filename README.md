@@ -52,7 +52,7 @@ Parameters:
     -P  password list
     -d	domain
 ```
-In this mode lyncsmash will enumerate usernames via a timing attack, using the Webticket service located on the Lync Front-End server. If a bad username and/or domain is specified, the response will be long. If it is a valid user, the response will be short. Due to limitations of the timing-attack, this can only be run single-thraded.
+In this mode lyncsmash will enumerate usernames via a timing attack, using the Webticket service located on the Lync Front-End server. If a bad username and/or domain is specified, the response will be long. If it is a valid user, the response will be short. Due to limitations of the timing-attack, this can only be run single-threaded.
 
 
 usage:
