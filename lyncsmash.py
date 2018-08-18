@@ -102,7 +102,7 @@ def discover_lync(host):
                 'dialin',
                 'meet',
                 'lyncdiscover',
-                'dialin',
+                'scheduler',
                 'access',
                 'lync',
                 'lyncext',
@@ -110,7 +110,8 @@ def discover_lync(host):
                 'lyncaccess',
                 'lync10',
                 'lyncweb',
-		'sip'
+		'sip',
+		'lyncdiscoverinternal'
         ]
 
         for position in range(0, len(subdomains)):
