@@ -104,7 +104,7 @@ python lyncsmash.py lock -H 2013-lync-fe.contoso.com -u administrator -d CONTOSO
 
 ## ntlm-info.py
 
-This script examines the HTTP headers from a null NTLM auth attempt against the /abs/ directory. This is a remake of the http-ntlm-info script from nmap (https://nmap.org/nsedoc/scripts/http-ntlm-info.html).
+This script examines the HTTP headers from a null NTLM auth attempt.  It will test against the /abs/ directory by default but any directory can be specified as a second argument (see below). This is a remake of the http-ntlm-info script from nmap (https://nmap.org/nsedoc/scripts/http-ntlm-info.html).
 
 Requires requests_ntlm -- install with:
 
@@ -113,6 +113,8 @@ Requires requests_ntlm -- install with:
 Usage:
 ```
 python ntlm-info.py dialin.domain.com
+
+python ntlm-info.py dialin.domain.com RequestHandlerExt
 ```
 
 ## thanks!
