@@ -22,6 +22,7 @@ DerbyCon 6.0 Slide Deck: https://github.com/nyxgeek/nyxgeek-slides/blob/master/T
  * lyncsmash.py - enumerate users via auth timing bug while brute forcing, lock accounts, locate lync installs
  * find_domain.sh  - example of how to use Nmap with http-ntlm-info script to discover internal NetBIOS & domain names
  * brute_force_ntlm.sh - example of a brute force attack against Skype/Lync using Medusa
+ * ntlm-info.py - script to get NetBIOS Domain name from NTLM auth
 
 ## wordlists
  * skype-directories.txt - a listing of directories that may have NTLM-auth enabled
@@ -100,6 +101,19 @@ python lyncsmash.py lock -H 2013-lync-fe.contoso.com -u administrator -d CONTOSO
 ```
 
 <hr>
+
+## ntlm-info.py
+
+This script examines the HTTP headers from a null NTLM auth attempt against the /abs/ directory. This is a remake of the http-ntlm-info script from nmap (https://nmap.org/nsedoc/scripts/http-ntlm-info.html).
+
+Requires requests_ntlm -- install with:
+
+```pip install requests_ntlm```
+
+Usage:
+```
+python ntlm-info.py dialin.domain.com
+```
 
 ## thanks!
 Thanks to @coldfusion39, @spoonman1091, and @shellfail for contributing fixes and improvements!
