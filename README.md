@@ -106,6 +106,8 @@ python lyncsmash.py lock -H 2013-lync-fe.contoso.com -u administrator -d CONTOSO
 
 This script examines the HTTP headers from a null NTLM auth attempt.  It will test against the /abs/ directory by default but any directory can be specified as a second argument (see below). This is a remake of the http-ntlm-info script from nmap (https://nmap.org/nsedoc/scripts/http-ntlm-info.html).
 
+Additional potential NTLM auth directories can be found in this repository under wordlists (https://github.com/nyxgeek/lyncsmash/blob/master/wordlists/skype-directories.txt).
+
 Requires requests_ntlm -- install with:
 
 ```pip install requests_ntlm```
