@@ -56,7 +56,7 @@ def main():
         # Enumerate valid Lync usernames
         elif args.attack == 'enum':
                 # check our arguments first
-                if ((args.passwd, args.passwdfile, args.useraspassword) == (None, None, None)):
+                if ((args.passwd, args.passwdfile) == (None, None)):
                        print_error('You need to specify either a password, a password file or the -PU option to attempt to use the username as password')
                        exit()
                 if all((args.passwd, args.passwdfile)):
