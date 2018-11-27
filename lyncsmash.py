@@ -40,7 +40,7 @@ def main():
         enum_parser.add_argument('-p', dest='passwd', help='Password to attempt', required=False)
         enum_parser.add_argument('-P', dest='passwdfile', help='Password file to read from', required=False)
         enum_parser.add_argument('-o', dest='outfile', help='Output file', required=False)
-	enum_parser.add_argument('-PU', dest='useraspassword', help='Try Username as password', required=False)
+	enum_parser.add_argument('-PU', action='store_true', help='Try Username as password', required=False)
 
         lock_parser = subparsers.add_parser('lock', help='Lock Lync user account')
         lock_parser.add_argument('-H', dest='host', help='Target IP address or host', required=True)
