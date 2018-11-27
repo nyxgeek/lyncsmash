@@ -40,6 +40,7 @@ def main():
         enum_parser.add_argument('-p', dest='passwd', help='Password to attempt', required=False)
         enum_parser.add_argument('-P', dest='passwdfile', help='Password file to read from', required=False)
         enum_parser.add_argument('-o', dest='outfile', help='Output file', required=False)
+	enum_parser.add_argument('-PU', dest='useraspassword', help='Try Username as password', required=False)
 
         lock_parser = subparsers.add_parser('lock', help='Lock Lync user account')
         lock_parser.add_argument('-H', dest='host', help='Target IP address or host', required=True)
@@ -55,8 +56,8 @@ def main():
         # Enumerate valid Lync usernames
         elif args.attack == 'enum':
                 # check our arguments first
-                if ((args.passwd, args.passwdfile) == (None, None)):
-                       print_error('You need to specify either a password or a password file to use')
+                if ((args.passwd, args.passwdfile, args.useraspassword) == (None, None, None)):
+                       print_error('You need to specify either a password, a password file or the -PU option to attempt to use the username as password')
                        exit()
                 if all((args.passwd, args.passwdfile)):
                        print_error('You cant have both a passwd file and passwd specified')
@@ -83,6 +84,11 @@ def main():
                                         for password in pass_file:
                                             timing_attack(args.host.rstrip(), args.usernames.rstrip(), password.rstrip(), args.domain.rstrip())
 
+				if (args.useraspassword != None):
+                                    with open(args.usernames) as pass_file:
+                                        for password in pass_file:
+                                            timing_attack(args.host.rstrip(), args.usernames.rstrip(), password.rstrip(), args.domain.rstrip())
+					
                                     pass_file.close()
 
                 else:
