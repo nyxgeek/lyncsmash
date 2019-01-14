@@ -40,6 +40,7 @@ def main():
         enum_parser.add_argument('-p', dest='passwd', help='Password to attempt', required=False)
         enum_parser.add_argument('-P', dest='passwdfile', help='Password file to read from', required=False)
         enum_parser.add_argument('-o', dest='outfile', help='Output file', required=False)
+        enum_parser.add_argument('-t', dest='time_avg', help='Known average request time', required=False, type=float)
 
         lock_parser = subparsers.add_parser('lock', help='Lock Lync user account')
         lock_parser.add_argument('-H', dest='host', help='Target IP address or host', required=True)
@@ -72,7 +73,10 @@ def main():
                 if os.path.isfile(args.usernames):
                         # get a baseline timeout - this is response time for invalid usernames
                         global timeout
-                        timeout = baseline_timeout(args.host, args.domain)
+                        if args.time_avg is not None:
+                            timeout = args.time_avg
+                        else:
+                            timeout = baseline_timeout(args.host, args.domain)
                         if timeout:
                                 print_status("Average timeout is: {0}".format(timeout))
                                 if (args.passwd != None):
