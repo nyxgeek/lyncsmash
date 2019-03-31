@@ -175,8 +175,8 @@ def timing_attack(host,userfilepath,password,domain):
                          status="INVALID USER: {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
                          print_error(status)
                          f.write("[-] {0}\n".format(status))
-		except exception as error:
-			continue
+		except Exception:
+			pass
 
               #print ''
         user_file.close()
@@ -276,5 +276,3 @@ def print_warn(msg):
 
 if __name__ == '__main__':
         main()
-	
-
