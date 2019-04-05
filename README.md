@@ -1,3 +1,5 @@
+Forked version to fix intermittentfloat error that causes the script to quit
+
 ```
 ██╗  ██╗   ██╗███╗   ██╗ ██████╗███████╗███╗   ███╗ █████╗ ███████╗██╗  ██╗
 ██║  ╚██╗ ██╔╝████╗  ██║██╔════╝██╔════╝████╗ ████║██╔══██╗██╔════╝██║  ██║
