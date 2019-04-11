@@ -1,4 +1,3 @@
-Forked version to fix intermittentfloat error that causes the script to quit
 
 ```
 ██╗  ██╗   ██╗███╗   ██╗ ██████╗███████╗███╗   ███╗ █████╗ ███████╗██╗  ██╗
@@ -55,6 +54,7 @@ Parameters:
     -P  password list
     -d	domain
     -o  output file
+    -t  manually set timeout
 ```
 In this mode lyncsmash will enumerate usernames via a timing attack, using the Webticket service located on the Lync Front-End server. If a bad username and/or domain is specified, the response will be long. If it is a valid user, the response will be short. Due to limitations of the timing-attack, this can only be run single-threaded.
 
@@ -122,4 +122,4 @@ python ntlm-info.py dialin.domain.com RequestHandlerExt
 ```
 
 ## thanks!
-Thanks to @coldfusion39, @spoonman1091, and @shellfail for contributing fixes and improvements!
+Thanks to @coldfusion39, @spoonman1091, and @shellfail, picarddam, @fals3s3t for contributing fixes and improvements!
