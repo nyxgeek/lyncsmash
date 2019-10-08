@@ -186,9 +186,11 @@ def timing_attack(host,userfilepath,password,domain, randomize):
 		except Exception:
 			pass
 
-              #print ''
+        endtime=datetime.datetime.now()
+        elapsed_time=endtime - currenttime
+        f.write("Finished lyncsmash at {0}\n".format(currenttime))
+        f.write("Elapsed time {0}\n".format(elapsed_time))
         user_file.close()
-
 
 
 # Determine the baseline timeout for invalid username
