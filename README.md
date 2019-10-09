@@ -123,4 +123,4 @@ python ntlm-info.py dialin.domain.com RequestHandlerExt
 ```
 
 ## thanks!
-Thanks to @coldfusion39, @spoonman1091, @nettitude, @shellfail, picarddam, and @fals3s3t for contributing fixes and improvements!
+Thanks to @coldfusion39, @spoonman1091, @nettitude, @shellfail, picarddam, @fals3s3t, and @Oddvarmoe for contributing fixes and improvements!
