@@ -55,6 +55,7 @@ Parameters:
     -d	domain
     -o  output file
     -t  manually set timeout
+    -r  Randomize the user input list
 ```
 In this mode lyncsmash will enumerate usernames via a timing attack, using the Webticket service located on the Lync Front-End server. If a bad username and/or domain is specified, the response will be long. If it is a valid user, the response will be short. Due to limitations of the timing-attack, this can only be run single-threaded.
 

@@ -36,6 +36,7 @@ def main():
         enum_parser = subparsers.add_parser('enum', help='Enumerate valid Lync usernames')
         enum_parser.add_argument('-H', dest='host', help='Target IP address or host', required=True)
         enum_parser.add_argument('-U', dest='usernames', help='Username file', required=True)
+        enum_parser.add_argument('-r', action='store_true', dest='randomize', help='Randomize usernames from input file', required=False)
         enum_parser.add_argument('-d', dest='domain', help='Internal domain name', required=True)
         enum_parser.add_argument('-p', dest='passwd', help='Password to attempt', required=False)
         enum_parser.add_argument('-P', dest='passwdfile', help='Password file to read from', required=False)
@@ -80,12 +81,12 @@ def main():
                         if timeout:
                                 print_status("Average timeout is: {0}".format(timeout))
                                 if (args.passwd != None):
-                                    timing_attack(args.host.rstrip(), args.usernames.rstrip(), args.passwd.rstrip(), args.domain.rstrip())
+                                    timing_attack(args.host.rstrip(), args.usernames.rstrip(), args.passwd.rstrip(), args.domain.rstrip(), args.randomize)
 
                                 if (args.passwdfile != None):
                                     with open(args.passwdfile) as pass_file:
                                         for password in pass_file:
-                                            timing_attack(args.host.rstrip(), args.usernames.rstrip(), password.rstrip(), args.domain.rstrip())
+                                            timing_attack(args.host.rstrip(), args.usernames.rstrip(), password.rstrip(), args.domain.rstrip(), args.randomize)
 
                                     pass_file.close()
 
@@ -150,7 +151,7 @@ def discover_lync(host):
 
         return indicator_count, switch.get(indicator_count, 'Definitely')
 
-def timing_attack(host,userfilepath,password,domain):
+def timing_attack(host,userfilepath,password,domain, randomize):
 
     global outputfile
 
@@ -158,7 +159,10 @@ def timing_attack(host,userfilepath,password,domain):
         currenttime=datetime.datetime.now()
         f.write("Started lyncsmash at {0}\n".format(currenttime))
         with open(os.path.abspath(userfilepath)) as user_file:
-             for user in user_file:
+            user_list = [line.strip() for line in user_file]
+            if randomize:
+                random.shuffle(user_list)
+            for user in user_list:
 		try:
                  response_time = send_xml(host.rstrip(), domain.rstrip(), user.rstrip(), password.rstrip())
 		 candidatevalue=float(float(response_time)/timeout)
@@ -182,9 +186,11 @@ def timing_attack(host,userfilepath,password,domain):
 		except Exception:
 			pass
 
-              #print ''
+        endtime=datetime.datetime.now()
+        elapsed_time=endtime - currenttime
+        f.write("Finished lyncsmash at {0}\n".format(currenttime))
+        f.write("Elapsed time {0}\n".format(elapsed_time))
         user_file.close()
-
 
 
 # Determine the baseline timeout for invalid username
