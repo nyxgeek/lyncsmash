@@ -111,6 +111,8 @@ This script examines the HTTP headers from a null NTLM auth attempt.  It will te
 
 Additional potential NTLM auth directories can be found in this repository under wordlists (https://github.com/nyxgeek/lyncsmash/blob/master/wordlists/skype-directories.txt).
 
+If you're having trouble locating NTLM auth directories, I wrote a script to scan for them:  (https://github.com/nyxgeek/ntlmscan).
+
 Requires requests_ntlm -- install with:
 
 ```pip install requests_ntlm```
