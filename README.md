@@ -52,7 +52,7 @@ Parameters:
     -U	username list
     -p  password
     -P  password list
-    -d	domain
+    -d	NetBIOS domain
     -o  output file
     -t  manually set timeout
     -r  Randomize the user input list
@@ -74,7 +74,7 @@ python lyncsmash.py enum -H 2013-lync-fe.contoso.com -U usernamelist.txt -p Wint
 
 ```
 Parameters:
-    -H	host list - one domain per line
+    -H	host list - one DNS base domain per line
 ```
 In this mode lyncsmash will attempt to enumerate various Skype/Lync subdomains via DNS, and returns a score based on number of indicators. Wildcard domains are discarded.
 
@@ -91,7 +91,7 @@ python lyncsmash.py discover -H domain_list.txt
 Parameters:
     -H	hostname
     -u	username to lock out
-    -d	domain
+    -d	NetBIOS domain
 ```
 
 In this mode lyncsmash will make 5 login attempts with an incorrect password, attempting to lock out a user account.
