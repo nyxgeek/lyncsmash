@@ -11,4 +11,4 @@ echo ""
 echo "Command:"
 echo "nmap -sS -p443 --script http-ntlm-info --script-args http-ntlm-info.root=/abs/ $HOST "
 
-nmap -sS -p443 --script http-ntlm-info --script-args http-ntlm-info.root=/abs/ $HOST 
+nmap -sS -Pn -p443 --script http-ntlm-info --script-args http-ntlm-info.root=/abs/ $HOST 
