@@ -176,7 +176,7 @@ def timing_attack(host,userfilepath,password,domain, randomize):
                          print_good(status)
                          f.write("[!] {0}\n".format(status))
                      else:
-                         status="VALID USER (INVALID PASSOWRD): {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
+                         status="VALID USER (INVALID PASSWORD): {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
                          print_good(status)
                          f.write("[+] {}\n".format(status))
                  else:
