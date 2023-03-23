@@ -44,7 +44,7 @@ def main():
         enum_parser.add_argument('-P', dest='passwdfile', help='Password file to read from', required=False)
         enum_parser.add_argument('-o', dest='outfile', help='Output file', required=False)
         enum_parser.add_argument('-t', dest='time_avg', help='Known average request time', required=False, type=float)
-	enum_parser.add_argument('-s', dest='sleep', help='Sleep timer to wait between reqeusts in seconds, for spray only', required=False, type=float)
+        enum_parser.add_argument('-s', dest='sleep', help='Sleep timer to wait between reqeusts in seconds, for spray only', required=False, type=float)
 	
         lock_parser = subparsers.add_parser('lock', help='Lock Lync user account')
         lock_parser.add_argument('-H', dest='host', help='Target IP address or host', required=True)
