@@ -73,7 +73,8 @@ def main():
                        global outputfile
                        outputfile = args.outfile
                 if args.sleep is not None:
-                       apSleep=args.sleep
+                       global apSleep
+                       apSleep = args.sleep
                 #okay, if we have a username file, proceed
                 if os.path.isfile(args.usernames):
                         # get a baseline timeout - this is response time for invalid usernames
