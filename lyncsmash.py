@@ -92,9 +92,6 @@ def main():
                                     with open(args.passwdfile) as pass_file:
                                         for password in pass_file:
                                             timing_attack(args.host.rstrip(), args.usernames.rstrip(), password.rstrip(), args.domain.rstrip(), args.randomize)
-
-                                    pass_file.close()
-
                 else:
                         print_error('Could not find username file')
 
@@ -198,7 +195,6 @@ def timing_attack(host,userfilepath,password,domain, randomize):
         elapsed_time=endtime - currenttime
         f.write("Finished lyncsmash at {0}\n".format(currenttime))
         f.write("Elapsed time {0}\n".format(elapsed_time))
-        user_file.close()
 
 # Determine the baseline timeout for invalid username
 def baseline_timeout(host, domain):
